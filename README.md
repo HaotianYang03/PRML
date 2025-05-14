@@ -30,6 +30,9 @@ python train.py
 ```python
 PRML/
 ├── Dataset/
+│      ├──acrocomia_aculeta/
+│      ├──anadenanthera_colubrina/
+│      └──...
 ├── dataloader.py
 ├── models.py
 ├── train.py
