@@ -4,6 +4,7 @@ from torch import nn
 from torch import optim
 from dataloader import train_loader, test_loader
 from tqdm import tqdm
+from models import *
 # import wandb
 
 # wandb.init(
@@ -12,27 +13,6 @@ from tqdm import tqdm
 # )
 
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
-class CustomResNet(nn.Module):
-    def __init__(self):
-        super(CustomResNet, self).__init__()
-
-        # 加载预训练ResNet50
-        self.backbone = models.resnet50(pretrained=False)
-        self.backbone.fc = nn.Identity()  
-
-        # 自定义全连接层
-        self.classifier = nn.Sequential(
-            nn.Linear(2048, 256), 
-            nn.ReLU(),
-            nn.Linear(256, 73),
-            nn.LogSoftmax(dim=1)
-        )
-
-    def forward(self, img):
-        features = self.backbone(img)
-        return self.classifier(features)
-    
 model = CustomResNet().to(DEVICE)
 loss_fn = nn.CrossEntropyLoss()
 loss_fn = loss_fn.to(DEVICE)  
