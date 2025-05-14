@@ -1,5 +1,4 @@
 import glob
-import torch
 import os
 from torch.utils import data
 from PIL import Image
