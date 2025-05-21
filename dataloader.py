@@ -7,15 +7,15 @@ from torchvision import transforms
 
 root_dir = "./Dataset/"
 
-# 获取所有类别文件夹路径（自动识别73个类别）
+# 获取所有类别文件夹路径
 all_class_dirs = sorted(glob.glob(os.path.join(root_dir, "*")))
-class_names = [os.path.basename(os.path.normpath(d)) for d in all_class_dirs]  # 获取类别名称列表
+class_names = [os.path.basename(os.path.normpath(d)) for d in all_class_dirs]
 
 # 获取所有图片路径及其对应标签
 image_paths = []
 labels = []
 for class_idx, class_dir in enumerate(all_class_dirs):
-    # 获取该类别下的所有图片路径（支持常见图片格式）
+    # 获取该类别下的所有图片路径
     class_images = sorted(glob.glob(os.path.join(class_dir, "*.[tT][iI][fF]"))) + \
                    sorted(glob.glob(os.path.join(class_dir, "*.jpg"))) + \
                    sorted(glob.glob(os.path.join(class_dir, "*.jpeg")))
@@ -49,19 +49,19 @@ class PollenDataset(data.Dataset):
     def __len__(self):
         return len(self.image_paths)
 
-# 数据预处理（参考网页6的标准图像处理流程）
+# 数据预处理
 transform = transforms.Compose([
-    transforms.Resize((256, 256)),       # 统一图像尺寸
-    transforms.RandomHorizontalFlip(),   # 数据增强
+    transforms.Resize((256, 256)),       
+    transforms.RandomHorizontalFlip(),   
     transforms.ToTensor(),
-    # transforms.Normalize(mean=[0.485, 0.456, 0.406],  # 标准化参数（参考网页6）
+    # transforms.Normalize(mean=[0.485, 0.456, 0.406],  
     #                      std=[0.229, 0.224, 0.225])
 ])
 
 # 创建完整数据集
 full_dataset = PollenDataset(image_paths, labels, transform=transform)
 
-# 创建分层划分的数据加载器（参考网页6的数据拆分方法）
+# 创建分层划分的数据加载器
 from sklearn.model_selection import train_test_split
 
 indices = np.arange(len(full_dataset))
@@ -76,14 +76,14 @@ train_indices, test_indices = train_test_split(
 train_dataset = data.Subset(full_dataset, train_indices)
 test_dataset = data.Subset(full_dataset, test_indices)
 
-# 创建数据加载器（参考网页7的DataLoader配置）
+# 创建数据加载器
 batch_size = 16
 train_loader = data.DataLoader(
     train_dataset,
     batch_size=batch_size,
     shuffle=True,
-    num_workers=4,    # 提高数据加载效率
-    pin_memory=True   # 加速GPU传输（参考网页6）
+    num_workers=4,    
+    pin_memory=True   
 )
 
 test_loader = data.DataLoader(
@@ -94,7 +94,7 @@ test_loader = data.DataLoader(
     pin_memory=True
 )
 
-# 验证信息输出
+# 输出验证
 print(f"总类别数: {len(class_names)}")
 print(f"总样本数: {len(full_dataset)}")
 print(f"训练集样本数: {len(train_dataset)}")

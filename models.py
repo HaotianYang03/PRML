@@ -5,7 +5,7 @@ class CustomResNet(nn.Module):
     def __init__(self):
         super(CustomResNet, self).__init__()
 
-        # 加载预训练ResNet50
+        # 加载预训练模型
         self.backbone = models.resnet50(pretrained=False)
         self.backbone.fc = nn.Identity()  
 

@@ -9,7 +9,7 @@ from models import *
 
 # wandb.init(
 #     project="PRML",
-#     name="baseline",             
+#     name="Baseline",             
 # )
 
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
