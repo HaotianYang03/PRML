@@ -1,5 +1,6 @@
 # PRML
 模式识别课设-48-花粉识别
+来自曾明杰的传统方法（该版本5fold acc 91.4）
 
 ## 🚀Getting Start
 
@@ -13,16 +14,15 @@ cd PRML
 ### 2. Create environment
 
 ```python
-conda create -n PRML python==3.10
-conda activate PRML
-pip install -r requirements.txt
-pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+conda env create -f environment.yml
 ```
 
 ### 3. Run the baseline
 
 ```python
-python train.py
+python feature0526.py
+python test06052.py
+python trainOUT.py
 ```
 
 ## 📁 Project Structure
