@@ -6,24 +6,39 @@ from dataloader import train_loader, test_loader
 from torch.optim.lr_scheduler import CosineAnnealingLR
 from tqdm import tqdm
 from models import *
+import argparse
 # import wandb
 
-# wandb.init(
-#     project="PRML",
-#     name="ViT-B-16-Fine-Tune",             
-# )
+def parse_args():
+    """定义命令行参数解析器"""
+    parser = argparse.ArgumentParser(description="PyTorch模型训练脚本")
+    
+    # 必需参数
+    parser.add_argument("--model", type=str, required=True,
+                       choices=["ResNet", "ViT_B_16", "ViT_H_14"])
+    parser.add_argument("--lr", type=float, default=0.0001)
+    parser.add_argument("--epochs", type=int, default=200)
+    parser.add_argument("--t_max", type=int, default=100)
+    parser.add_argument("--eta_min", type=float, default=1e-5)
+    
+    return parser.parse_args()
 
+args = parse_args()
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-# model = CustomResNet().to(DEVICE)
-# model = ViTForPollenClassification().to(DEVICE)
-model = CLIPViT_H14_ForPollenClassification().to(DEVICE)
+
+model_map = {
+        "ResNet": ResNet,
+        "ViT_B_16": ViT_B_16,
+        "ViT_H_14": ViT_H_14
+}
+model = model_map[args.model]().to(DEVICE)
+
 loss_fn = nn.CrossEntropyLoss()
 loss_fn = loss_fn.to(DEVICE)  
-optimizer = optim.Adam(model.parameters(), lr=0.0001)
-# scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=50, gamma=0.2)
-scheduler = CosineAnnealingLR(optimizer, T_max=100, eta_min=1e-5)  # T_max为周期长度
+optimizer = optim.Adam(model.parameters(), lr=args.lr)
+scheduler = CosineAnnealingLR(optimizer, T_max=args.t_max, eta_min=args.eta_min)  # T_max为周期长度
 
-epochs = 200  
+epochs = args.epochs  
 train_losses, test_losses = [], []
 
 for epoch in range(epochs):

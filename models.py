@@ -4,9 +4,9 @@ import torchvision
 import torch
 from transformers import CLIPVisionModel, AutoProcessor
 
-class CustomResNet(nn.Module):
+class ResNet(nn.Module):
     def __init__(self):
-        super(CustomResNet, self).__init__()
+        super(ResNet, self).__init__()
 
         # 加载预训练模型
         self.backbone = models.resnet50(pretrained=True)
@@ -24,7 +24,7 @@ class CustomResNet(nn.Module):
         features = self.backbone(img)
         return self.classifier(features)
     
-class ViTForPollenClassification(nn.Module):
+class ViT_B_16(nn.Module):
     def __init__(self, all_weight=False, num_classes=73):
         super().__init__()
         pretrained_vit_weights = torchvision.models.ViT_B_16_Weights.DEFAULT
@@ -71,7 +71,7 @@ class ViTForPollenClassification(nn.Module):
 #         pooled_output = outputs.pooler_output 
 #         return self.classifier(pooled_output)
 
-class CLIPViT_H14_ForPollenClassification(torch.nn.Module):
+class ViT_H_14(torch.nn.Module):
     def __init__(self, all_weight=False, num_classes=73):
         super().__init__()
         # 统一使用float32精度[2,4](@ref)
